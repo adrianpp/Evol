@@ -7,12 +7,18 @@
 #include "BodyPart.h"
 #include "Force.h"
 
+//spring constants aren't a first class type, so add them
+namespace units {
+UNIT_ADD(spring, kilogram_per_second_squared, kilograms_per_second_squared, kgps_sq, compound_unit<mass::kilogram, inverse<squared<time::seconds>>>)
+};
+
 namespace EVOL_NS {
 
 class Muscle : public BodyPart, public CanHaveAxonInputs, public ForceSource {
 public:
-    typedef float LengthTy;
-    typedef float RigidityTy;
+    typedef PositionableObject::PositTy LengthTy;
+//spring constant is measured in Newtons/meter, or kilograms/second^2
+    typedef units::spring::kilogram_per_second_squared_t RigidityTy;
 private:
     LengthTy desiredLength;
 //the rigidity of a muscle is how hard it pushes/pulls on the nodes it is connected to
@@ -47,7 +53,7 @@ public:
         //scale the actual length by the scaling to get desired length
         //TODO: there should be some baseline length that we are working off of!
         //desiredLength = ret * getMuscleLength();
-        desiredLength = ret;
+        desiredLength = LengthTy(1.0) * ret;
     }
 //finally, commit the value we calculated
     virtual void commit()

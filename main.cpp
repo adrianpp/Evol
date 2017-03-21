@@ -136,7 +136,7 @@ public:
 class BallEnd : public PositionableObject {
 public:
     BallEnd(PositTy x, PositTy y) : PositionableObject(x,y) {}
-    virtual PositionableObject::MassTy getMass() {return 1.0;}
+    virtual PositionableObject::MassTy getMass() {return PositionableObject::MassTy(1.0);}
 };
 
 int main()
@@ -170,11 +170,11 @@ Connections {\
     simulation.addAxonAsInputTo("c1", "s2");
     simulation.addAxonAsInputTo("s2", "s2");
     
-    simulation.add("m1", new Muscle(1));
+    simulation.add("m1", new Muscle(Muscle::RigidityTy(1.0)));
     simulation.addAxonAsInputTo("s2", "c1");
 
-    PositionableObjectPtr objectA(new BallEnd(0.0,0.0));
-    PositionableObjectPtr objectB(new BallEnd(9.0,9.0));
+    PositionableObjectPtr objectA(new BallEnd(PositionableObject::PositTy(0.0),PositionableObject::PositTy(0.0)));
+    PositionableObjectPtr objectB(new BallEnd(PositionableObject::PositTy(9.0),PositionableObject::PositTy(9.0)));
     std::dynamic_pointer_cast<Muscle>(simulation.getPartNamed("m1"))->connectEnds(objectA, objectB);
 
     for(;simulationTicks<10000; ++simulationTicks)
@@ -187,7 +187,7 @@ Connections {\
         {
             std::cout << BI.first << "(" << BI.second->getTypeAsString() << ")";
             if( AxonPtr axe = std::dynamic_pointer_cast<Axon>(BI.second) ) std::cout << " : " << axe->getOutputValue();
-            if( MusclePtr musc = std::dynamic_pointer_cast<Muscle>(BI.second) ) std::cout << " : " << musc->getMuscleLength() << "L";
+            if( MusclePtr musc = std::dynamic_pointer_cast<Muscle>(BI.second) ) std::cout << " : " << musc->getMuscleLength();
             std::cout << std::endl;
         }
         std::cout << "objectA : (" << objectA->getPosX() << ", " << objectA->getPosY() << ")\n";
