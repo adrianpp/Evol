@@ -101,11 +101,11 @@ public:
         //calculate acceleration, F=M*A
         Acceleration accel = total / getMass();
         //calculate velocity, dV = A*t
-        vx = vx + accel.getX() * TIME_RATE;
-        vy = vy + accel.getY() * TIME_RATE;
+        vx += accel.getX() * TIME_RATE;
+        vy += accel.getY() * TIME_RATE;
         //calculate position, dP = V*t
-        posx = posx + vx * TIME_RATE;
-        posy = posy + vy * TIME_RATE;
+        posx += vx * TIME_RATE;
+        posy += vy * TIME_RATE;
     }
 };
 

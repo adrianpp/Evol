@@ -2173,7 +2173,50 @@ namespace units
 	//------------------------------
 	//	LINEAR ARITHMETIC
 	//------------------------------
+    
+    template<class Units, typename T, template<typename> class NonLinearScale, typename RhsType>
+    inline unit_t<Units, T, NonLinearScale>& operator+=(unit_t<Units, T, NonLinearScale>& lhs, const RhsType& rhs) noexcept
+	{
+		static_assert(traits::is_convertible_unit_t<unit_t<Units, T, NonLinearScale>, RhsType>::value ||
+			(traits::is_dimensionless_unit<decltype(lhs)>::value && std::is_arithmetic<RhsType>::value), 
+			"parameters are not compatible units.");
 
+		lhs = lhs + rhs;
+		return lhs;
+	}
+
+	template<class Units, typename T, template<typename> class NonLinearScale, typename RhsType>
+	inline unit_t<Units, T, NonLinearScale>& operator-=(unit_t<Units, T, NonLinearScale>& lhs, const RhsType& rhs) noexcept
+	{
+		static_assert(traits::is_convertible_unit_t<unit_t<Units, T, NonLinearScale>, RhsType>::value ||
+			(traits::is_dimensionless_unit<decltype(lhs)>::value && std::is_arithmetic<RhsType>::value),
+			"parameters are not compatible units.");
+
+		lhs = lhs - rhs;
+		return lhs;
+	}
+
+	template<class Units, typename T, template<typename> class NonLinearScale, typename RhsType>
+	inline unit_t<Units, T, NonLinearScale>& operator*=(unit_t<Units, T, NonLinearScale>& lhs, const RhsType& rhs) noexcept
+	{
+		static_assert((traits::is_dimensionless_unit<RhsType>::value || std::is_arithmetic<RhsType>::value),
+			"right-hand side parameter must be dimensionless.");
+
+		lhs = lhs * rhs;
+		return lhs;
+	}
+
+	template<class Units, typename T, template<typename> class NonLinearScale, typename RhsType>
+	inline unit_t<Units, T, NonLinearScale>& operator/=(unit_t<Units, T, NonLinearScale>& lhs, const RhsType& rhs) noexcept
+	{
+		static_assert((traits::is_dimensionless_unit<RhsType>::value || std::is_arithmetic<RhsType>::value),
+			"right-hand side parameter must be dimensionless.");
+
+		lhs = lhs / rhs;
+		return lhs;
+	}
+
+ 
 	template<class UnitTypeLhs, class UnitTypeRhs, typename std::enable_if<!traits::is_same_scale<UnitTypeLhs, UnitTypeRhs>::value, int>::type = 0>
 	constexpr inline int operator+(const UnitTypeLhs& lhs, const UnitTypeRhs& rhs) noexcept
 	{
