@@ -52,8 +52,7 @@ public:
         if( ret > 1.5 ) ret = 1.5;
         //scale the actual length by the scaling to get desired length
         //TODO: there should be some baseline length that we are working off of!
-        //desiredLength = ret * getMuscleLength();
-        desiredLength = LengthTy(1.0) * ret;
+        desiredLength = 1.0_m * ret;
     }
 //finally, commit the value we calculated
     virtual void commit()

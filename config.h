@@ -3,5 +3,8 @@
 
 #define EVOL_NS evol
 
+#include "units.h"
+using namespace units::literals;
+
 #endif
 

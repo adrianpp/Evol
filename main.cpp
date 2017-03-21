@@ -136,7 +136,7 @@ public:
 class BallEnd : public PositionableObject {
 public:
     BallEnd(PositTy x, PositTy y) : PositionableObject(x,y) {}
-    virtual PositionableObject::MassTy getMass() {return PositionableObject::MassTy(1.0);}
+    virtual PositionableObject::MassTy getMass() {return 1.0_kg;}
 };
 
 int main()
@@ -173,8 +173,8 @@ Connections {\
     simulation.add("m1", new Muscle(Muscle::RigidityTy(1.0)));
     simulation.addAxonAsInputTo("s2", "c1");
 
-    PositionableObjectPtr objectA(new BallEnd(PositionableObject::PositTy(0.0),PositionableObject::PositTy(0.0)));
-    PositionableObjectPtr objectB(new BallEnd(PositionableObject::PositTy(9.0),PositionableObject::PositTy(9.0)));
+    PositionableObjectPtr objectA(new BallEnd(0.0_m,0.0_m));
+    PositionableObjectPtr objectB(new BallEnd(9.0_m,9.0_m));
     std::dynamic_pointer_cast<Muscle>(simulation.getPartNamed("m1"))->connectEnds(objectA, objectB);
 
     for(;simulationTicks<10000; ++simulationTicks)

@@ -2,7 +2,6 @@
 #define _FORCE_H__
 
 #include "config.h"
-#include "units.h"
 #include <cmath>
 #include <memory>
 #include <vector>
@@ -11,7 +10,7 @@ namespace EVOL_NS {
 
 //how much a single 'tick' is in our simulation -
 //    smaller number reduces the rate of acceleration / position update
-const units::time::second_t TIME_RATE(0.001);
+const units::time::second_t TIME_RATE(0.001_s);
 
 typedef units::dimensionless::scalar_t ScalarTy;
 
