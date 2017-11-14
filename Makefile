@@ -1,26 +1,35 @@
+#configuration for inputs/outputs
 EXEC_NAME=evol
 SRCS=main.cpp
 
-CPPFLAGS+=-std=c++11 -g
-OBJS=$(subst .cpp,.o,$(SRCS))
+#where to store intermediates and our header directory
+BUILD_DIR=build
+INCLUDE_DIR=include
 
-#building the application
+#compiler flags, makefile variables
+CPPFLAGS+=-std=c++11 -g -I $(INCLUDE_DIR)
+OBJS=$(SRCS:%.cpp=$(BUILD_DIR)/%.o)
+
+#some basic rules
 all: $(EXEC_NAME)
 
 $(EXEC_NAME): $(OBJS)
-	$(CXX) -o $(EXEC_NAME) $(OBJS)
+	$(CXX) -o $@ $^
 
-#building the dependency file
-DEPEND_FILE=./.depend
-depend: $(DEPEND_FILE)
+#if we need to rebuild the intermediate directory
+$(BUILD_DIR):
+	mkdir -p $@
 
-$(DEPEND_FILE): $(SRCS)
-	$(RM) $(DEPEND_FILE)
-	$(CXX) $(CPPFLAGS) -MM $^>>$(DEPEND_FILE)
+#include dependencies, but dont fail if we cant find them
+-include $(OBJS:%.o=%.d)
 
-include $(DEPEND_FILE)
+#order-only prereq of the build dir, to force it being made before our objects
+#note also that by passing -MMD in our build flags, dependency file will be made as well
+$(OBJS): $(BUILD_DIR)/%.o : %.cpp | $(BUILD_DIR)
+	$(CXX) $(CPPFLAGS) -MMD -c $< -o $@
 
-#clean
+#clean the intermediate files and final exec
 clean:
-	$(RM) $(OBJS) $(DEPEND_FILE) $(EXEC_NAME)
+	$(RM) -rf $(BUILD_DIR) $(EXEC_NAME)
 
+.PHONY: all clean
